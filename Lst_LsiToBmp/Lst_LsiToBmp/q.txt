@@ -1,0 +1,197 @@
+// Lst_LsiToBmp.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+
+#include "stdafx.h"
+/***********************变量的定义***********************************/
+unsigned char* pBmpBuf;						 //读入图像数据的指针
+int SJDX[] = { 1 };										 //读入图像数据的大小指针
+char* name;										 //读入图像数据的指针
+int bmpWidth;									 //图像的宽度
+int bmpHeight;									 //图像的高度
+int biBitCount;									 //图像类型，像素位数
+//int i;
+RGBQUAD* pColorTable;							 //颜色表指针
+LSTIFILE infoHead;						     //定义LST LBI变量，读取位图信息进内存，存放在变量infoHead中
+/****************************************************************************
+读取图像的位图数据、宽度、高度、颜色表及像素位数，并存放在全局变量中
+*****************************************************************************/
+bool readBmp(char* bmpName)
+{
+	errno_t err;									 //open_S必备参数
+	FILE* fp;									     //open_S必备参数
+	if ((err = fopen_s(&fp, bmpName, "rb")) != 0)		 //以二进制读的方式打开指定的图像文件 
+	{
+		printf("打开文件失败nn");
+		return 0;
+	}
+	fread(&infoHead,infoHead.biCount, 1, fp);     //读取位图的信息头到内存  地址，大小，字节个数，文件
+
+	//int i = 0; int x = 0; int y = 1; int z = 0;
+	//while (  i < 35 )
+	//{
+	//	cout << "01x=" << x << " y=" << y << " z=" << z << endl;
+	//		if (i == 99)
+	//		{
+	//			SJDX[x] = infoHead.biDiZhi[x];
+	//			cout << "99x==========================" << x << "y=" << y << "z=" << z << endl;
+	//			cout << "1读取文件   " << i << "号文件大小s是" << SJDX[x] << "=" << infoHead.biDiZhi[x] << "-" << infoHead.biDiZhi[z] << "   完成" << endl;
+
+	//		}
+	//		else
+	//		{
+	//			cout << "02x=" << x << " y=" << y << " z=" << z << endl;
+	//			if (infoHead.biDiZhi[y] != 0)
+	//			{
+	//				SJDX[x] = infoHead.biDiZhi[y] - infoHead.biDiZhi[z];
+	//				cout << "2读取文件   " << i << "号文件大小s是" << SJDX[x] << "=" << infoHead.biDiZhi[y] << "-" << infoHead.biDiZhi[z] << "   完成" << endl;
+	//			}
+	//			else
+	//			{
+	//				SJDX[x] = infoHead.biDiZhi[z];
+	//				cout << "3读取文件   " << i << "号文件大小s是" << SJDX[x] << "=" << infoHead.biDiZhi[z] << "   完成" << endl;
+
+	//			}
+	//			x++; z++; y++;
+	//		}
+	//		cout << "03x=" << x << " y=" << y << " z=" << z << endl;
+
+	//		i++;
+	//}
+	/***************************************************************
+	               分配位图数据到内存，数据大小，有100个数据
+	***************************************************************/
+	//for ( i = 0; i < 100; i++){
+	//	if (SJDX[i] != 0)
+	//	{
+	//		pBmpBuf = new unsigned char[SJDX[i]];     //空间大小=位图的width*height( 其中width必须为4的倍数）
+	//		fread(pBmpBuf, SJDX[i], 1, fp);		   //读取位图数据到内存  地址，大小，字节个数，文件
+
+	//		cout << "分配空间数据   " << i << "号文件大小" << SJDX[i] << "   成功" << endl;
+	//	}
+	//}
+
+	fclose(fp);										 //关闭打开的文件
+	cout << "   成功" << endl;
+	//return 0 ;											   //读取文件成功
+
+}
+/***************************************************************************************************
+将指定数据写到文件中
+***************************************************************************************************/
+bool saveBmp(char* bmpName, unsigned char* imgBuf, int sjdx)
+{			//      文件名，             位图数据，    数据大小
+
+	//如果位图数据指针为0，则没有数据输入
+	if (!imgBuf)
+	{
+		printf("文件读取失败没有数据输入nn");
+		return 0;
+	}
+	//颜色表大小，以字节为单位：灰度图像为1024;彩色图像为0
+	//int colorTablesize = 0;
+	//if (biBitCount == 8)
+	//	colorTablesize = 1024;//待存储图像数据每行字节数为4的倍数
+	//int lineByte = (width * biBitCount / 8 + 3) / 4 * 4;
+	//以二进制写的方式打开文件
+	errno_t err;									 //open_S必备参数
+	FILE* fp;									     //open_S必备参数
+
+	err = fopen_s(&fp, bmpName, "wb"); 			    //打开文件//检测
+
+	/**************************************************************************************************************************
+	申请位图文件头结构变量，填写文件头信息并写入文件
+	***************************************************************************************************************************/
+	//BITMAPFILEHEADER fileHead;								//定义位图信息头结构变量，读取位图信息头进内存，存放在变量fileHead中
+	//fileHead.bfType = 0x4D42;								// bmp 类型
+	////bfSize是图像文件4个部分之和
+	//fileHead.bfSize = sizeof(BITMAPFILEHEADER)+sizeof(BITMAPINFOHEADER)+colorTablesize + lineByte * height;
+	//// 文件头BITMAPFILEHEADER+位图信息头BITMAPINFOHEADER+彩色表RGBQUAD+图像的实际数据BYTE
+	//fileHead.bfReserved1 = 0;//保留
+	//fileHead.bfReserved2 = 0;//保留
+	////bfOffBits是图像文件前3个部分所需空间之和
+	//fileHead.bfOffBits = 54 + colorTablesize;
+	////写文件头进文件
+	//fwrite(&fileHead, sizeof(BITMAPFILEHEADER), 1, fp);
+	///****************************************************************
+	//申请位图信息头结构变量，填写信息头信息
+	//***********************************************/
+	//BITMAPINFOHEADER infoHead;								//定义文件信息头
+	//infoHead.biBitCount = biBitCount;						//图像位数
+	//infoHead.biClrImportant = 0;							//颜色索引的数目
+	//infoHead.biClrUsed = 0;									//位图实际使用的彩色表中的颜色索引数
+	//infoHead.biCompression = 0;								//图像数据压缩的类型
+	//infoHead.biHeight = height;								//图像的高度
+	//infoHead.biPlanes = 1;									//为目标设备说明位面数，其值设置为1
+	//infoHead.biSize = 40;									//BITMAPINFOHEADER结构所需要的字节数
+	//infoHead.biSizeImage = lineByte * height;				//图像的大小，以字节为单位。当用BI_RGB格式时，可设置为0
+	//infoHead.biWidth = width;								//图像的宽度
+	//infoHead.biXPelsPerMeter = 0;							//水平分辨率
+	//infoHead.biYPelsPerMeter = 0;							//垂直分辨率
+	////写位图信息头进内存
+	//fwrite(&infoHead, sizeof(BITMAPINFOHEADER), 1, fp);
+	////如果灰度图像，有颜色表，写入文件
+	//if (biBitCount == 8)
+	//	fwrite(pColorTable, sizeof(RGBQUAD), 256, fp);
+	////写位图数据进文件
+	fwrite(imgBuf, sjdx, 1, fp);
+	fclose(fp);
+	return 1;												//写入文件成功
+}
+/*********************************************************************************************************************
+位图处理过程
+********************************************************************************************************************/
+
+void pixHandle(char* bmpName)
+{
+	cout << "  1成功" << endl;
+	////读入指定BMP文件进内存
+	readBmp(bmpName);
+	//输出图像的信息
+	//每行字节数
+	cout << "NAME=" << bmpName << endl;
+
+	/***************************************************************************
+	改名保存
+	***************************************************************************/
+	int changdu;
+	char lbt[] = ".lbt";
+	char drive[_MAX_DRIVE];
+	char dir[_MAX_DIR];
+	char fname[_MAX_FNAME];
+	char ext[_MAX_EXT];
+	char fnames[]="1";
+	changdu = strlen(bmpName);								//获取文件名的长度
+	_splitpath_s(bmpName, drive, dir, fname, ext);	        //分解路径
+	//          （路径  ，磁盘 ， 目录，文件名，扩展名）
+	cout << "文件名从" << bmpName << "改为" << fname << ext << "   成功" << endl;
+	int i=0;
+	while ( i < 100)
+	{
+		if (SJDX[i] != 0)
+		{
+			_itoa(i, fnames, 10);
+			strcat_s(fname, sizeof(fname), fnames);                        //合并2个字符串
+
+			cout << "文件名从" << bmpName << "改为" << fname << "   成功" << endl;
+
+			strcat_s(fname, sizeof(fname) + 3, lbt);                        //合并2个字符串
+			cout << "文件名从" << bmpName << "改为" << fname << "   成功" << endl;
+			char* writePath = fname;
+			//图片处理后再存储
+			cout << "NAME=" << writePath << endl;
+
+			saveBmp(writePath, pBmpBuf, SJDX[i]);
+			//      文件名，图像数据
+			i++;
+		}
+	}
+	delete[] pBmpBuf;
+	if (biBitCount == 8)
+		delete[] pColorTable;
+}
+void main(int   argc, char*   argv[])
+{
+	pixHandle(argv[1]);
+}

@@ -137,10 +137,12 @@ void pixHandle(char* bmpName)
 	_splitpath_s(bmpName, drive, dir, fname, ext);	        //分解路径
 	//          （路径  ，磁盘 ， 目录，文件名，扩展名）
 	cout << "文件名从" << bmpName << "改为" << fname << ext<< "   成功" << endl;
-	strcat_s(fname, sizeof(changdu)+3, kzm2);                                    //合并2个字符串
+	strcat_s(fname, sizeof(fname)+3, kzm2);                                    //合并2个字符串
 	cout << "文件名从" << bmpName << "改为" << fname << "   成功" << endl;
 	char* writePath = fname;
 	//图片处理后再存储
+	cout << "NAME=" << writePath << endl;
+
 	saveBmp(writePath, pBmpBuf, bmpWidth, bmpHeight, biBitCount, pColorTable);
 	//      文件名，图像数据，图像宽，图像高，图像位数，色彩表
 	delete[] pBmpBuf;
