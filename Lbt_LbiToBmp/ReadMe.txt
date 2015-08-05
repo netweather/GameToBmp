@@ -11,4 +11,13 @@ typedef struct tagLBTIFILE {/*  */
 	WORD       biBitCount;		 //位图的位数
 } LBTIFILE;
 
+_splitpath(分解路径函数)
 
+
+_splitpath( 
+path_buffer,          
+drive,                     //盘符
+*dir,                       //目录
+fname,                 //文件名
+ext                       //扩展名
+)

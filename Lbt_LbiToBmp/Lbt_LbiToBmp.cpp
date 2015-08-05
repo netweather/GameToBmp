@@ -11,9 +11,7 @@ int bmpWidth;									 //图像的宽度
 int bmpHeight;									 //图像的高度
 int biBitCount;									 //图像类型，像素位数
 RGBQUAD* pColorTable;							 //颜色表指针
-//BITMAPINFOHEADER infoHead;						 //定义位图信息头结构变量，读取位图信息头进内存，存放在变量infoHead中
-LBTIFILE infoHead;						     //定义位图信息头结构变量，读取位图信息头进内存，存放在变量infoHead中
-char Fname[] = "L";								 //保存文件的名字
+LBTIFILE infoHead;						     //定义LBT LBI变量，读取位图信息进内存，存放在变量infoHead中
 /****************************************************************************
 读取图像的位图数据、宽度、高度、颜色表及像素位数，并存放在全局变量中
 *****************************************************************************/
@@ -130,17 +128,18 @@ void pixHandle(char* bmpName)
 	改名保存
 	***************************************************************************/
 	int changdu;
-	int Fchangdu;
-	int bmpchangdu;
 	char kzm2[] = ".bmp";
+	char drive[_MAX_DRIVE];
+	char dir[_MAX_DIR];
+	char fname[_MAX_FNAME];
+	char ext[_MAX_EXT];
 	changdu = strlen(bmpName);								//获取文件名的长度
-	Fchangdu = changdu - 4;
-	bmpchangdu = changdu - 4;
-	strncpy_s(Fname, changdu, bmpName, changdu - 4);					//截取文本   目标字符串,目标字符串中的字符数,源字符串,要复制的字符数，或者 _TRUNCATE.
-	cout << "文件名从" << bmpName << "改为" << Fname << "   成功" << endl;
-	strcat_s(Fname, sizeof(changdu)+3, kzm2);                                    //合并2个字符串
-	cout << "文件名从" << bmpName << "改为" << Fname << "   成功" << endl;
-	char* writePath = Fname;
+	_splitpath_s(bmpName, drive, dir, fname, ext);	        //分解路径
+	//          （路径  ，磁盘 ， 目录，文件名，扩展名）
+	cout << "文件名从" << bmpName << "改为" << fname << ext<< "   成功" << endl;
+	strcat_s(fname, sizeof(changdu)+3, kzm2);                                    //合并2个字符串
+	cout << "文件名从" << bmpName << "改为" << fname << "   成功" << endl;
+	char* writePath = fname;
 	//图片处理后再存储
 	saveBmp(writePath, pBmpBuf, bmpWidth, bmpHeight, biBitCount, pColorTable);
 	//      文件名，图像数据，图像宽，图像高，图像位数，色彩表
